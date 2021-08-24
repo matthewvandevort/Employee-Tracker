@@ -1,27 +1,26 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
+const util = require('util');
 
-require('dotenv'). config();
-
-const connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host: 'localhost',
+    port: 3306,
     user: 'root',
-    password: process.env.DB_PASSWORD,
-    database: 'employee_db'
+    password: 'rootr00t',
+    database: 'employee_DB'
+    
 });
+console.log('now listining');
+connection.query = util.promisify(connection.query);
 
-connection.connect(err => {
+connection.connect(function (err) {
     if (err) throw err;
-    console.log('connected as id ' + connection.threadId);
-    afterConnection();
-});
+    startProgram();
+})
 
-afterConnection = () => {
-    console.log("****************************");
-    console.log("*                          *");
-    console.log("*     Employee Tracker     *");
-    console.log("*                          *");
-    console.log("****************************");
-    promptUser();
-}
+console.table(
+    "\n-------Employee Tracker-------\n"
+);
+
+const startProgram =
