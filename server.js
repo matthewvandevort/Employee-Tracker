@@ -2,6 +2,7 @@ const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
 const util = require('util');
+const { listenerCount } = require('node:events');
 
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -133,6 +134,61 @@ const viewRoles = async () => {
     };
 };
 
+const addEmployee = async () => {
+    try {
+        console.log('Add an Employee');
+        let roles = await connection.query("SELECT * FROM role");
+        let managers = await connection.query("SELECT * FROM employee");
+        let answer = await inquirer.prompt([
+            {
+                name:'firstName',
+                type: 'input',
+                message: 'What is the employee first name?'
+            },
+            {
+                name: 'lastName',
+                type: 'input',
+                message: 'What is the employee last name?'
+            },
+            {
+                name: 'employeeRoleId',
+                type: 'list',
+                choices: role.map((role) =>{
+                    return {
+                        name: role.title,
+                        value: role.id
+                    }
+                }),
+                message: "What is the role id for this Employee?"
+            },
+            {
+                name: 'employeeMangerId',
+                type: 'list',
+                choices: managers.map((manager) => {
+                    return {
+                        name: manager.first_name + " " + manager.last_name,
+                        value: manager.id 
+                    }
+                }),
+                message: "What is the Employee's Manager Id?"
+            }
+        ])
+
+        let decision = await connection.query("INSERT INTO employee SET ?", {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: (answer.employeeRoleId),
+            manager_id: (answer.employeeManagerId)
+        });
+
+        console.log(`${answer.firstName} ${answer.lastName} added succesfully.\n`);
+        startProgram();
+
+    } catch (err) {
+        console.log(err);
+        startProgram();
+    };
+};
 
 
 
