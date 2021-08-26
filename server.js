@@ -98,3 +98,41 @@ const viewEmployee = async () => {
         startProgram();
     };
 };
+
+const viewDepartment = async () => {
+    console.log('Department View');
+    try {
+        let query = 'SELECT * FROM department';
+        connection.query(query, function (err, res) {
+            if(err) throw(err);
+            let departmentArray = [];
+            res.forEach(department => departmentArray.push(department));
+            console.table(departmentArray);
+            startProgram();
+        });
+    } catch (err) {
+        console.log(err);
+        startProgram();
+    };
+};
+
+const viewRoles = async () => {
+    console.log('Role View');
+    try {
+        let query = 'SELECT * FROM rolet';
+        connection.query(query, function (err, res) {
+            if(err) throw(err);
+            let roleArray = [];
+            res.forEach(role => roleArray.push(role));
+            console.table(roleArray);
+            startProgram();
+        });
+    } catch (err) {
+        console.log(err);
+        startProgram();
+    };
+};
+
+
+
+
