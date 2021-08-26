@@ -11,16 +11,73 @@ let connection = mysql.createConnection({
     database: 'employee_DB'
     
 });
-console.log('now listining');
+
 connection.query = util.promisify(connection.query);
 
 connection.connect(function (err) {
     if (err) throw err;
-    startProgram();
+    console.log('now listining');
+    // startProgram();
+    
 })
 
 console.table(
     "\n-------Employee Tracker-------\n"
 );
 
-const startProgram =
+const startProgram = async( => {
+    try {
+        let answer = await inquirer.prompt({
+            name: 'action',
+            type: 'list',
+            maessage: 'What would you like to do?',
+            choices: [
+                'View Employees',
+                'View Departments',
+                'View Roles',
+                'Add Employees',
+                'Add Departments',
+                'Add Roles',
+                'Update Employee Role',
+                'Exit'
+            ]
+        });
+
+        switch (answer.action) {
+            case 'View Employees':
+                viewEmployee();
+                break;
+
+            case 'View Departments':
+                viewDepartment();
+                break;
+
+            case 'View Roles':
+                viewRoles();
+                break;
+
+            case 'Add Employees':
+                addEmployee();
+                break;
+
+            case 'Add Departments':
+                addDepartment();
+                break;
+
+            case 'Add Roles':
+                addRoles();
+                break;
+
+            case 'Update Employee Role':
+                updateEmployee();
+                break;
+
+            case 'Exit':
+                connection.end();
+                break;
+        };
+    } catch (err) {
+        console.log(err);
+        startProgram();
+    };
+};
