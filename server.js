@@ -2,7 +2,7 @@ const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
 const util = require('util');
-const { listenerCount } = require('node:events');
+
 
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -18,7 +18,7 @@ connection.query = util.promisify(connection.query);
 connection.connect(function (err) {
     if (err) throw err;
     console.log('now listining');
-    // startProgram();
+    startProgram();
     
 })
 
@@ -26,10 +26,10 @@ console.table(
     "\n-------Employee Tracker-------\n"
 );
 
-const startProgram = async( => {
+const startProgram = async() => {
     try {
         let answer = await inquirer.prompt({
-            name: 'action',
+            name: 'Action',
             type: 'list',
             maessage: 'What would you like to do?',
             choices: [
@@ -153,7 +153,7 @@ const addEmployee = async () => {
             {
                 name: 'employeeRoleId',
                 type: 'list',
-                choices: role.map((role) =>{
+                choices: roles.map((role) =>{
                     return {
                         name: role.title,
                         value: role.id
@@ -190,5 +190,28 @@ const addEmployee = async () => {
     };
 };
 
+const addDepartment = async () => {
+    try {
+        console.log('Add Department');
 
+        let answer = await inquirer.prompt([
+            {
+                name: 'deptName',
+                type: 'input',
+                message: 'What is the name of the new department?'
+            }
+        ]);
+
+        let result = await connection.query("INSERT INTO department SET ?", {
+            department_name: answer.deptName
+        });
+
+        console.log(`${answer.deptName} added successfully to departments.\n`)
+        initialAction();
+
+    } catch (err) {
+        console.log(err);
+        initialAction();
+    };
+}
 
