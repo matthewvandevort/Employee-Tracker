@@ -1,3 +1,4 @@
+//Dependencies//
 const inquirer = require("inquirer")
 const mysql = require("mysql2")
 const cTable = require('console.table');
@@ -11,11 +12,13 @@ const connection = mysql.createConnection({
   });
 
 
+// Connection ID//
 connection.connect(function(err) {
     if (err) throw err
     console.log("Connected as Id" + connection.threadId)
     startPrompt();
 });
+//Initial Prompt Function//
 function startPrompt() {
     inquirer.prompt([
     {
@@ -38,34 +41,33 @@ function startPrompt() {
               viewAllEmployees();
             break;
     
-            case "View All Employee's By Roles?":
+          case "View All Employee's By Roles?":
               viewAllRoles();
             break;
-
-            case "View all Emplyees By Deparments":
+          case "View all Emplyees By Deparments":
               viewAllDepartments();
             break;
           
-            case "Add Employee?":
+          case "Add Employee?":
                 addEmployee();
-            break;
+              break;
 
-            case "Update Employee":
+          case "Update Employee":
                 updateEmployee();
-            break;
+              break;
       
             case "Add Role?":
                 addRole();
-            break;
+              break;
       
             case "Add Department?":
                 addDepartment();
-            break;
+              break;
     
             }
     })
 }
-
+// View All Employees Function //
 function viewAllEmployees() {
     connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
     function(err, res) {
@@ -74,7 +76,7 @@ function viewAllEmployees() {
       startPrompt()
   })
 }
-
+// View All Roles Function//
 function viewAllRoles() {
   connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
   function(err, res) {
@@ -83,7 +85,7 @@ function viewAllRoles() {
   startPrompt()
   })
 }
-
+//View All Employees By Departments Function//
 function viewAllDepartments() {
   connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
   function(err, res) {
@@ -93,6 +95,7 @@ function viewAllDepartments() {
   })
 }
 
+//Select Role Quieries Role Title for Add Employee Prompt Function//
 var roleArr = [];
 function selectRole() {
   connection.query("SELECT * FROM role", function(err, res) {
@@ -104,7 +107,7 @@ function selectRole() {
   })
   return roleArr;
 }
-
+//Select Role Quieries The Managers for Add Employee Prompt Function//
 var managersArr = [];
 function selectManager() {
   connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
@@ -116,7 +119,7 @@ function selectManager() {
   })
   return managersArr;
 }
-
+//Add Employee Function//
 function addEmployee() { 
     inquirer.prompt([
         {
@@ -141,7 +144,6 @@ function addEmployee() {
             message: "Whats their managers name?",
             choices: selectManager()
         }
-
     ]).then(function (val) {
       var roleId = selectRole().indexOf(val.role) + 1
       var managerId = selectManager().indexOf(val.choice) + 1
@@ -160,7 +162,8 @@ function addEmployee() {
 
   })
 }
-function updateEmployee() {
+//Update Employee Function//
+  function updateEmployee() {
     connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", function(err, res) {
     // console.log(res)
      if (err) throw err
@@ -205,7 +208,7 @@ function updateEmployee() {
   });
 
 }
-
+//Add Employee Role Function//
 function addRole() { 
   connection.query("SELECT role.title AS Title, role.salary AS Salary FROM role",   function(err, res) {
     inquirer.prompt([
@@ -236,8 +239,8 @@ function addRole() {
 
     });
   });
-}
-
+  }
+//Add Department Function//
 function addDepartment() { 
 
     inquirer.prompt([
@@ -260,5 +263,4 @@ function addDepartment() {
             }
         )
     })
-}
-
+  }
