@@ -1,3 +1,7 @@
+
+
+
+
 # Employee Tracker
 
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
@@ -48,7 +52,7 @@ Simply run:
 npm install
 ```
 # Demo
-
+https://user-images.githubusercontent.com/82176811/131233228-9bb2a741-3fc4-49f1-9369-fa6622993989.mp4
 # Resources Used
 
 * [MDN Docs](https://developer.mozilla.org/en-US/)
