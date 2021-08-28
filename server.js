@@ -104,8 +104,8 @@ function selectRole() {
       roleArr.push(res[i].title);
     }
 
+    return roleArr;
   })
-  return roleArr;
 }
 //Select Role Quieries The Managers for Add Employee Prompt Function//
 var managersArr = [];
